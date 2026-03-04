@@ -24,7 +24,7 @@
 - [Slides](slides/main.pdf)
 
 ## Abstract
-This work studies the applicability of the Generative Drifting framework to one-step image super-resolution. Generative Drifting models generation as a deterministic transport between probability distributions, where a learned vector field shifts samples from a source distribution toward a target one. We propose a conditional drifting formulation that learns a direct transport map from low-resolution images to high-resolution images in a single forward pass. The approach aims to capture residual structure between degraded and clean image manifolds without iterative refinement. The method is evaluated on standard super-resolution benchmarks using PSNR, SSIM, and LPIPS, and compared with GAN-based and distilled diffusion models in terms of reconstruction quality and inference time.  
+This work investigates the applicability of the Generative Drifting framework to single-step image super-resolution. Existing super-resolution methods face a fundamental trade-off between perceptual quality and inference speed. To address this problem, we explore the Generative Drifting paradigm, which models generation as deterministic transport between probability distributions using a learned vector field. We propose a conditional formulation that learns a direct transport from low-resolution to high-resolution images in a single forward pass. Experiments show competitive reconstruction quality and improved efficiency compared with GAN-based and distilled diffusion models, measured using PSNR, SSIM, LPIPS, and inference time.
 ## Keywords
 Generative Drifting, Super-Resolution, One-Step Generation, Conditional Diffusion
 
