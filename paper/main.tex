@@ -44,7 +44,7 @@
 %%%
 
 
-\title{Title}
+\title{Generative Drifting for One-Step Super-Resolution}
 
 
 % The \author macro works with any number of authors. There are two commands
@@ -57,15 +57,13 @@
 
 
 \author{
-  Name Surname\\
+  Kseniia Ibragimova\\
   MIPT\\
   Moscow, Russia\\
-  \texttt{email@phystech.edu}\\
   \And
-  Name Surname\\
+  Andrei Filatov\\
   MIPT\\
   Moscow, Russia\\
-  \texttt{email@phystech.edu}\\
 }
 
 
@@ -75,41 +73,176 @@
 \maketitle
 
 \begin{abstract}
-    Recent advances in generative modeling have significantly improved perceptual quality in image super-resolution (SR). However, a fundamental trade-off between reconstruction fidelity and inference speed remains unresolved. Diffusion-based approaches achieve state-of-the-art visual realism but require multiple iterative denoising steps, limiting their suitability for real-time applications. In contrast, single-step models optimized with pixel-wise losses provide fast inference yet often produce overly smooth results with insufficient high-frequency detail. In this work, we investigate the applicability of the Generative Drifting framework to the task of single-step super-resolution. We propose a conditional adaptation of the drifting mechanism that learns a direct transport map from the distribution of low-resolution images to the distribution of high-resolution images in a single forward pass. Our central hypothesis is that the learned drifting field can effectively model the residual structure between degraded and clean image manifolds, enabling high-fidelity reconstruction without iterative refinement. We evaluate the proposed approach on standard SR benchmarks using PSNR, SSIM, and LPIPS metrics, together with inference time analysis. The method is compared against representative GAN-based architectures and distilled diffusion models to assess both perceptual quality and computational efficiency.
+    This work investigates the applicability of the Generative Drifting framework to single-step image super-resolution. Existing super-resolution methods face a fundamental trade-off between perceptual quality and inference speed. To address this problem, we explore the Generative Drifting paradigm, which models generation as deterministic transport between probability distributions using a learned vector field. We propose a conditional formulation that learns a direct transport from low-resolution to high-resolution images in a single forward pass. Experiments show competitive reconstruction quality and improved efficiency compared with GAN-based and distilled diffusion models, measured using PSNR, SSIM, LPIPS, and inference time.
 \end{abstract}
 
-\textbf{Keywords:} Generative Drifting, Super-Resolution, One-Step Generation, Conditional Diffusion
+\textbf{Keywords:} Generative Drifting, Super-Resolution, One-Step Generation
 
 \section{Introduction}\label{sec:intro}
 
-TODO
+\section{Introduction}
 
-\textbf{Contributions.} Our contributions can be summarized as follows:
+Generative modeling aims to learn mappings between complex high-dimensional data distributions. 
+In image restoration tasks such as single-image super-resolution (SR), the objective is to reconstruct a high-resolution (HR) image from its low-resolution (LR) observation. 
+Formally, this problem can be interpreted as learning a conditional transformation that maps images from the LR domain to the HR domain. 
+Single-image super-resolution has numerous practical applications, including medical imaging, remote sensing, video restoration, and digital photography. 
+Despite substantial progress in recent years, designing models that simultaneously achieve high perceptual quality and efficient inference remains a challenging problem.
+
+Early deep learning approaches to super-resolution relied on convolutional neural networks trained with pixel-wise reconstruction losses. Works such as SRCNN~\cite{dong2015srcnn} first demonstrated the effectiveness of deep learning for SR, while subsequent architectures like VDSR~\cite{kim2016vdsr}, EDSR~\cite{lim2017edsr}, and RCAN~\cite{zhang2018rcan} pushed the performance further through deeper networks and advanced architectural designs. Such methods typically produce images with high peak signal-to-noise ratio (PSNR) but often fail to recover realistic textures. 
+
+To address this limitation, adversarial learning was introduced in SRGAN~\cite{ledig2017srgan}, which employs a discriminator network to encourage photo-realistic outputs. 
+Subsequent improvements such as ESRGAN~\cite{wang2018esrgan} further enhanced perceptual quality through improved architectures and perceptual loss functions. 
+However, adversarial training is often unstable and may introduce artifacts or hallucinated structures that are inconsistent with the input image.
+
+More recently, diffusion-based generative models have achieved remarkable results in image restoration. 
+Methods such as SR3~\cite{saharia2021sr3} formulate super-resolution as an iterative denoising process and produce highly realistic reconstructions. 
+Nevertheless, diffusion models typically require dozens or hundreds of inference steps, which significantly increases computational cost. 
+To address this issue, several works attempt to accelerate diffusion sampling through distillation or architectural modifications~\cite{salimans2022progressive}. 
+For example, SinSR~\cite{wang2023sinsr} and OSEDiff~\cite{wu2024osediff} approximate multi-step diffusion dynamics with a single-step network. 
+Despite these advances, such methods often rely on complex training procedures or require pre-trained diffusion models.
+
+An alternative direction for fast generative modeling is based on transport and flow formulations. 
+Normalizing flows have been applied to super-resolution in SRFlow~\cite{lugmayr2020srflow}, enabling probabilistic reconstruction of HR images via exact likelihood training. 
+More recently, several works propose learning transport dynamics through vector fields, including Flow Matching~\cite{lipman2023flowmatching} and related one-step generative modeling frameworks such as Consistency Models~\cite{song2023consistency} and MeanFlows~\cite{geng2025meanflows}. 
+These approaches interpret generation as transporting samples between distributions along learned velocity fields.
+
+A recent framework, Generative Drifting~\cite{deng2026drifting}, proposes a deterministic generative model trained using a drifting vector field that moves generated samples toward the data distribution. 
+The method defines attraction and repulsion forces between samples in feature space and learns a transport map that aligns generated and real data distributions. 
+Unlike diffusion-based approaches, drifting-based models perform generation in a single forward pass, enabling efficient inference.
+
+In this work, we investigate the applicability of the Generative Drifting framework to the conditional task of single-image super-resolution. 
+While the original drifting formulation focuses on unconditional generative modeling, super-resolution requires conditioning on the observed low-resolution image. 
+We therefore propose a conditional drifting formulation that learns a direct transport map from LR images to their HR counterparts.
+
+The proposed method constructs a drifting vector field in a joint feature space that incorporates both residual image representations and conditioning information from the LR input. 
+This formulation allows generated samples to move toward the manifold of realistic HR images while preserving consistency with the observed LR input. 
+As a result, the model performs super-resolution in a single forward pass without iterative refinement or adversarial training.
+
+The contributions of this work can be summarized as follows:
+
 \begin{itemize}
-    \item We present...
-    \item We demonstrate the validity of our theoretical results through empirical studies...
-    \item We highlight the implications of our findings for...
+\item We propose a conditional formulation of the Generative Drifting framework for the task of single-image super-resolution.
+\item We introduce a drifting vector field defined in a joint feature space that incorporates both residual image information and conditioning from the LR input.
+\item We develop a one-step super-resolution model that avoids iterative diffusion sampling and adversarial training while maintaining competitive reconstruction quality.
+\item We conduct experimental evaluation on standard super-resolution benchmarks using PSNR, SSIM, LPIPS, and runtime metrics.
 \end{itemize}
 
-\textbf{Outline.} The rest of the paper is organized as follows...
+The paper proposes a drifting-based method for conditional image super-resolution, providing efficient one-step reconstruction and distinguished by the use of a conditional drifting vector field defined in a joint feature space.
+\section{Problem Statement}\label{sec:prelim}
 
-\section{Related Work}\label{sec:rw}
+Let
+\[
+\mathcal{D}=\{(x_i^{LR},x_i^{HR})\}_{i=1}^{N}
+\]
+be a dataset of paired low-resolution and high-resolution images, where
+\[
+x_i^{LR}\in\mathbb{R}^{h\times w\times c}, \qquad
+x_i^{HR}\in\mathbb{R}^{H\times W\times c},
+\]
+and $H=sh$, $W=sw$ for a fixed scaling factor $s$.
 
-\textbf{Topic \#1.}
-TODO
+The goal is to construct a model that reconstructs a high-resolution image
+from its low-resolution observation.
 
-\textbf{Topic \#2.}
-TODO
+Let
+\[
+f_{\theta}:\mathbb{R}^{h\times w\times c}\rightarrow\mathbb{R}^{H\times W\times c}
+\]
+be a parametric family of functions, where $\theta\in\Theta$ is the vector of
+model parameters and $\Theta$ is the admissible parameter space.
+For an input image $x_i^{LR}$, the model predicts
+\[
+\hat{x}_i^{HR}=f_{\theta}(x_i^{LR}).
+\]
 
-\section{Preliminaries}\label{sec:prelim}
+The reconstruction is performed as a residual correction of an upsampled
+low-resolution image. Let
+\[
+u:\mathbb{R}^{h\times w\times c}\rightarrow\mathbb{R}^{H\times W\times c}
+\]
+be a fixed upsampling operator. Define
+\[
+x_i^{UP}=u(x_i^{LR}),
+\]
+and the generated and target residuals
+\[
+r_i^{gen}=\hat{x}_i^{HR}-x_i^{UP}, \qquad
+r_i^{pos}=x_i^{HR}-x_i^{UP}.
+\]
 
-\subsection{General notation}
+Following the Generative Drifting framework, for each generated sample
+a drift vector
+\[
+V_i=
+\sum_{j=1}^{N}W_{ij}^{pos}r_j^{pos}
+-
+\beta\sum_{j=1}^{N}W_{ij}^{neg}r_j^{gen}
+\]
+is constructed, where $W_{ij}^{pos}$ and $W_{ij}^{neg}$ are attraction and
+repulsion weights, respectively, and $\beta>0$ is a repulsion coefficient.
 
-In this section, we introduce the general notation used in the rest of the paper and the basic assumptions. 
+The drift vector defines a target point
+\[
+\tilde{x}_i^{HR}=\hat{x}_i^{HR}+\eta V_i,
+\]
+where $\eta>0$ is the drift step.
 
-\subsection{Assumptions} 
+To estimate the model parameters, consider the following loss terms.
 
-TODO
+The drift loss enforces consistency with the drift direction:
+\[
+L_{drift}^{(i)}=
+\left\|
+\hat{x}_i^{HR}-\tilde{x}_i^{HR}
+\right\|_1.
+\]
+
+The reconstruction loss measures the deviation from the ground-truth
+high-resolution image:
+\[
+L_{rec}^{(i)}=
+\left\|
+\hat{x}_i^{HR}-x_i^{HR}
+\right\|_1.
+\]
+
+The low-resolution consistency loss enforces compatibility between the
+reconstructed image and the observed low-resolution input:
+\[
+L_{LR}^{(i)}=
+\left\|
+D(\hat{x}_i^{HR})-x_i^{LR}
+\right\|_1,
+\]
+where
+\[
+D:\mathbb{R}^{H\times W\times c}\rightarrow\mathbb{R}^{h\times w\times c}
+\]
+is a fixed degradation operator.
+
+The total empirical loss is defined as
+\[
+L(\theta)=
+\frac{1}{N}\sum_{i=1}^{N}
+\left(
+L_{drift}^{(i)}
++\lambda_{LR}L_{LR}^{(i)}
++\lambda_{rec}L_{rec}^{(i)}
+\right),
+\]
+where $\lambda_{LR}>0$ and $\lambda_{rec}>0$ are weighting coefficients.
+
+The optimal model parameters are obtained by solving the optimization problem
+\[
+\theta^{*}=
+\arg\min_{\theta\in\Theta} L(\theta).
+\]
+
+The solution $\theta^{*}$ defines the super-resolution model
+$f_{\theta^{*}}$, and the inference procedure consists of a single forward pass
+\[
+\hat{x}^{HR}=f_{\theta^{*}}(x^{LR}).
+\]
 
 \section{Method}\label{sec:method}
 
