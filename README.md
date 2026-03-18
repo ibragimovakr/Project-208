@@ -28,16 +28,6 @@ This work investigates the applicability of the Generative Drifting framework to
 ## Keywords
 Generative Drifting, Super-Resolution, One-Step Generation, Conditional Diffusion
 
-## Citation
-
-If you find our work helpful, please cite us.
-```BibTeX
-@article{citekey,
-    title={Title},
-    author={Name Surname, Name Surname (consultant), Name Surname (advisor)},
-    year={2025}
-}
-```
 
 ## Licence
 
