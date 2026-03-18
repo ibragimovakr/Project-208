@@ -239,7 +239,35 @@ $f_{\theta^{*}}$, and the inference procedure consists of a single forward pass
 \]
 
 
+\section{Experiment Plan}\label{sec:exp_plan}
 
+\textbf{Goal}
+Validate that conditional Generative Drifting is applicable to super-resolution and achieves competitive quality with efficient one-step inference.
+
+\textbf{Dataset}
+DIV2K (800 train, 100 validation) with bicubic downsampling (×2, ×3, ×4). Additional testing on Set5, Set14, BSD100, Urban100.
+
+\textbf{Baselines}
+SRCNN, SRGAN, SR3, SinSR (as discussed in Introduction).
+
+\textbf{Metrics}
+PSNR, SSIM, LPIPS, inference time (ms).
+
+\textbf{Hypotheses}
+\begin{itemize}
+    \item \textbf{H1 (Applicability):} The method successfully generates HR images from LR inputs.
+    \item \textbf{H2 (Quality):} Competitive PSNR/SSIM and better LPIPS than GAN-based methods.
+    \item \textbf{H3 (Speed):} Faster than diffusion models (SR3), comparable to one-step methods (SinSR).
+\end{itemize}
+
+\textbf{Expected Tables and Figures}
+\begin{itemize}
+    \item \textbf{Table 1:} Quantitative comparison (PSNR/SSIM/LPIPS) on DIV2K across scaling factors.
+    \item \textbf{Table 2:} Inference time comparison (ms per image).
+    \item \textbf{Figure 1:} Qualitative comparison (LR, Bicubic, SRCNN, SRGAN, SR3, SinSR, Ours, HR).
+    \item \textbf{Figure 2:} Ablation study on loss components.
+    \item \textbf{Figure 3:} Trade-off plot (inference time vs. LPIPS).
+\end{itemize}
 \section{Preliminary experiment}\label{sec:exp}
 
 \textbf{Goal.} The goal of the preliminary experiment is to verify the feasibility of conditional Generative Drifting for one-step super-resolution and compare it with a plain residual baseline.
