@@ -1,0 +1,10 @@
+{
+  "output_root": "./outputs/drift_sr",
+  "data": {
+    "root": "./data",
+    "train_hr_dir": "./data/DIV2K_train_HR",
+    "train_lr_dir": "./data/DIV2K_train_LR_bicubic_X4/X4",
+    "val_hr_dir": "./data/DIV2K_valid_HR",
+    "val_lr_dir": "./data/DIV2K_valid_LR_bicubic_X4/X4"
+  }
+}

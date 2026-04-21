@@ -1,0 +1,38 @@
+{
+  "viz": {
+    "hr_dir": "./data/DIV2K_valid_HR",
+    "lr_dir": "./data/DIV2K_valid_LR_bicubic_X4/X4",
+    "output_root": "./outputs/article_style_sr_crops",
+    "scale": 4,
+    "seed": 42,
+    "default_crop_size": 126,
+    "display_upscale": 4,
+    "zero_noise": true
+  },
+  "checkpoints": {
+    "best_lpips_e034": "./outputs/drift_sr/checkpoints/best_lpips.pt",
+    "last_e040": "./outputs/drift_sr/checkpoints/last.pt"
+  },
+  "image_names": ["0802.png", "0855.png", "0888.png"],
+  "crops_by_image": {
+    "0802.png": [
+      {"color": "#ff3b30", "xy_rel": [0.30, 0.25], "size": 126},
+      {"color": "#007aff", "xy_rel": [0.63, 0.55], "size": 126}
+    ],
+    "0855.png": [
+      {"color": "#ff3b30", "xy_rel": [0.22, 0.20], "size": 126},
+      {"color": "#007aff", "xy_rel": [0.56, 0.62], "size": 126}
+    ],
+    "0888.png": [
+      {"color": "#ff3b30", "xy_rel": [0.61, 0.90], "size": 126},
+      {"color": "#007aff", "xy_rel": [0.56, 0.82], "size": 126}
+    ]
+  },
+  "model_order": ["Bicubic", "best_lpips_e034", "last_e040", "HR"],
+  "display_names": {
+    "Bicubic": "Bicubic",
+    "best_lpips_e034": "best lpips ckpt",
+    "last_e040": "last ckpt",
+    "HR": "HR"
+  }
+}
