@@ -21,7 +21,7 @@
 - [LinkReview](LINKREVIEW.md)
 - [Code](code)
 - [Paper](paper/paper_ibragimova.pdf)
-- [Slides]()
+- [Slides](slides/final_talk.pdf)
 
 ## Abstract
 This paper investigates Generative Drifting for one-step single-image super-resolution in the one-to-many setting. Super-resolution is inherently ill-posed. A single low-resolution image corresponds to multiple plausible high-resolution reconstructions. Nevertheless, efficient deterministic methods often produce averaged and over-smoothed results. To address this limitation, we extend Generative Drifting to conditional super-resolution. We propose a stochastic one-step model that maps a low-resolution input and random noise directly to plausible high-resolution outputs. The method performs drifting in feature space, encouraging samples to move toward admissible high-resolution targets while avoiding collapse to a single reconstruction. Experiments show that conditional drifting improves the fidelity--diversity trade-off over a matched stochastic pixel/LR-consistency baseline. We also find that this trade-off strongly depends on the geometry of the feature space used to compute the drifting field. These results suggest that conditional drifting is an effective mechanism for learning LR-consistent one-to-many reconstructions in a single forward pass.
