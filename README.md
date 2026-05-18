@@ -29,7 +29,6 @@ This paper investigates Generative Drifting for one-step single-image super-reso
 ## Keywords
 Single-image super-resolution, conditional generation, one-step generation, generative drifting, stochastic restoration
 
-![Poster](poster/poster.png)
 
 ## Licence
 
